@@ -2,6 +2,7 @@ global using Smartbell.App.Contracts;
 global using Smartbell.App.Services;
 global using Smartbell.Shared.Entities;
 global using Smartbell.Shared.Dtos;
+global using Smartbell.App.Models;
 
 namespace Smartbell.App
 {

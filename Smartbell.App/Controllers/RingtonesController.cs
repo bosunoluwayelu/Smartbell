@@ -19,52 +19,58 @@ namespace Smartbell.App.Controllers
             return View(ringtones);
         }
 
-        // GET: RingtoneController/Details/5
-        public ActionResult Details(int id)
+        // GET: Transaction/AddOrEdit(Insert)
+        // GET: Transaction/AddOrEdit/5(Update)
+        public async Task<IActionResult> AddOrEdit(Guid id)
         {
-            return View();
+            if (id == Guid.Empty)
+                return View(new CreateRingtoneViewModel());
+            else
+            {
+                var ringtoneModel = await _ringtoneService.GetByIdAsync(id);
+                if (ringtoneModel == null)
+                {
+                    return NotFound();
+                }
+                return View(ringtoneModel);
+            }
         }
 
-        // GET: RingtoneController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RingtoneController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> AddOrEdit(Guid id, [Bind("Id,Description,RingtoneFilePath")] CreateRingtoneViewModel createRingtoneViewModel)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                //Insert
+                if (id == Guid.Empty)
+                {
+                    //transactionModel.Date = DateTime.Now;
+                    //_context.Add(transactionModel);
+                    //await _context.SaveChangesAsync();
 
-        // GET: RingtoneController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: RingtoneController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                }
+                //Update
+                else
+                {
+                    //try
+                    //{
+                    //    _context.Update(transactionModel);
+                    //    await _context.SaveChangesAsync();
+                    //}
+                    //catch (DbUpdateConcurrencyException)
+                    //{
+                    //    if (!TransactionModelExists(transactionModel.TransactionId))
+                    //    { return NotFound(); }
+                    //    else
+                    //    { throw; }
+                    //}
+                }
+                // return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Transactions.ToList()) });
+                return Json(new { });
             }
-            catch
-            {
-                return View();
-            }
+            // return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", transactionModel) });
+            return Json(new { });
         }
 
         // GET: RingtoneController/Delete/5

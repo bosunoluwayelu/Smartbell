@@ -30,5 +30,25 @@ namespace Smartbell.App.Services
                 return null;
             }
         }
+
+        public async Task<RingtoneResponseDto> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var http = _httpClientFactory.CreateClient("smrtbell");
+                var response = await http.GetAsync($"ringtones/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<RingtoneResponseDto>();
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }
