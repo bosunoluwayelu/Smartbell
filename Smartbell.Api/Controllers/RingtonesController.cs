@@ -92,6 +92,13 @@ namespace Smartbell.Api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("upload")]
+        public async Task<IActionResult> UploadRingtone(IFormFile file)
+        {
+            return Ok();
+        }
+
         // DELETE: api/Configs/5
         [HttpPost("{id}")]
         public async Task<IActionResult> DeleteRingtone(Guid id)
