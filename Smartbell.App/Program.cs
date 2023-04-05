@@ -1,8 +1,9 @@
 global using Smartbell.App.Contracts;
 global using Smartbell.App.Services;
-global using Smartbell.Shared.Entities;
+//global using Smartbell.Shared.Entities;
 global using Smartbell.Shared.Dtos;
 global using Smartbell.App.Models;
+global using AutoMapper;
 
 namespace Smartbell.App
 {
@@ -20,6 +21,8 @@ namespace Smartbell.App
             });
 
             builder.Services.AddScoped<IRingtoneService, RingtoneService>();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
 

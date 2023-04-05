@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Smartbell.App.Models
+namespace Smartbell.Shared.Dtos
 {
     public class CreateRingtoneViewModel
     {

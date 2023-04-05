@@ -6,12 +6,14 @@ namespace Smartbell.App.Controllers
     public class RingtonesController : Controller
     {
         private readonly IRingtoneService _ringtoneService;
-        public RingtonesController(IRingtoneService ringtoneService)
+        private readonly IMapper _mapper;
+        public RingtonesController(IRingtoneService ringtoneService, IMapper mapper)
         {
             _ringtoneService = ringtoneService;
+            _mapper = mapper;
         }
 
-        // GET: RingtoneController
+        // GET: RingtonesController
         public async Task<IActionResult> Index()
         {
             var ringtones = await _ringtoneService.GetAsync();
@@ -19,8 +21,8 @@ namespace Smartbell.App.Controllers
             return View(ringtones);
         }
 
-        // GET: Transaction/AddOrEdit(Insert)
-        // GET: Transaction/AddOrEdit/5(Update)
+        // GET: Ringtones/AddOrEdit(Insert)
+        // GET: Ringtones/AddOrEdit/5(Update)
         public async Task<IActionResult> AddOrEdit(Guid id)
         {
             if (id == Guid.Empty)
@@ -32,6 +34,7 @@ namespace Smartbell.App.Controllers
                 {
                     return NotFound();
                 }
+                //_mapper.Map<CreateRingtoneViewModel>(ringtoneModel)
                 return View(ringtoneModel);
             }
         }

@@ -20,6 +20,8 @@ namespace Smartbell.Shared.Profiles
 
             CreateMap<Ringtone, RingtoneResponseDto>();
             CreateMap<RingtoneResponseDto, Ringtone>();
+            CreateMap<RingtoneResponseDto, CreateRingtoneViewModel>();
+            CreateMap<CreateRingtoneViewModel, RingtoneResponseDto>();
         }
     }
 }
