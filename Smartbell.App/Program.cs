@@ -1,9 +1,13 @@
 global using Smartbell.App.Contracts;
 global using Smartbell.App.Services;
-//global using Smartbell.Shared.Entities;
+global using Smartbell.Shared.Entities;
 global using Smartbell.Shared.Dtos;
 global using Smartbell.App.Models;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
 global using AutoMapper;
+global using Smartbell.App.Data;
 
 namespace Smartbell.App
 {
@@ -14,6 +18,14 @@ namespace Smartbell.App
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            var _connectionString = builder.Configuration.GetConnectionString("DefaultSqlServerConnection");
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_connectionString));
+
+            // Identity configuration
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient("smrtbell", httpClient =>
             {
@@ -39,6 +51,7 @@ namespace Smartbell.App
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

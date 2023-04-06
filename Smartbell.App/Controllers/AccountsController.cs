@@ -5,10 +5,37 @@ namespace Smartbell.App.Controllers
 {
     public class AccountsController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public AccountsController(UserManager<ApplicationUser> userManager,
+                                  SignInManager<ApplicationUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
         // GET: AccountsController
         public ActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody] CreateAccountDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            return View(model);
         }
 
         // GET: AccountsController/Details/5

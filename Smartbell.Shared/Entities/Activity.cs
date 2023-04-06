@@ -15,11 +15,11 @@ namespace Smartbell.Shared.Entities
         public string Description { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(50)", Order = 2)]
+        [Column(TypeName = "nvarchar(200)", Order = 2)]
         public string ImageFilePath { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(50)", Order = 3)]
+        [Column(TypeName = "nvarchar(200)", Order = 3)]
         public string VideoFilePath { get; set; }
     }
 }
