@@ -32,6 +32,25 @@ namespace Smartbell.App.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user == null)
+                {
+                    user = new ApplicationUser
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        PhoneNumber = model.PhoneNumber,
+                        Email = model.Email,
+                    };
+
+                    var response = await _userManager.CreateAsync(user, model.Password);
+
+                    if (response.Succeeded)
+                    {
+                        Response.Redirect("/");
+                    }
+                }
+
                 return View(model);
             }
 
