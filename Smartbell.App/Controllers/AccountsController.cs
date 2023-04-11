@@ -32,7 +32,7 @@ namespace Smartbell.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Email);
+                var user = await _userManager.FindByNameAsync(model.Email); //
                 if (user == null)
                 {
                     user = new ApplicationUser
