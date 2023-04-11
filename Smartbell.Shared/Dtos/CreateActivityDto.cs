@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace Smartbell.Shared.Dtos
         public string Description { get; set; }
 
         [Required]
-        public string ImageFilePath { get; set; }
+        public IFormFile ImageFilePath { get; set; }
 
         [Required]
-        public string VideoFilePath { get; set; }
+        public IFormFile VideoFilePath { get; set; }
     }
 }

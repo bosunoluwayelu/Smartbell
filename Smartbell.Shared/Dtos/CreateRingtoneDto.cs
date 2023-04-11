@@ -14,8 +14,8 @@ namespace Smartbell.Shared.Dtos
         public string Description { get; set; }
 
         [Required]
-        public string RingtoneFilePath { get; set; }
+        public IFormFile RingtoneFilePath { get; set; }
 
-        public IFormFile Image { get; set; }
+        //public IFormFile Image { get; set; }
     }
 }

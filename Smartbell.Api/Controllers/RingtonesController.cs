@@ -69,7 +69,7 @@ namespace Smartbell.Api.Controllers
         // POST: api/Configs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Config>> PostRingtone(CreateRingtoneDto ringtone)
+        public async Task<ActionResult<Config>> PostRingtone([FromForm]CreateRingtoneDto ringtone)
         {
             try
             {
@@ -91,13 +91,6 @@ namespace Smartbell.Api.Controllers
                 return new JsonResult("[PostRingtone error!]") { StatusCode = 500 };
             }
         }
-
-        //[HttpPost]
-        //[Route("upload")]
-        //public async Task<IActionResult> UploadRingtone(IFormFile file)
-        //{
-        //    return Ok();
-        //}
 
         // DELETE: api/Configs/5
         [HttpPost("{id}")]

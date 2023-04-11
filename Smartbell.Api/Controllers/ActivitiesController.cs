@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
 //using Microsoft.EntityFrameworkCore;
 //using Smartbell.Api.Data;
 //using Smartbell.Shared.Entities;
@@ -16,11 +17,15 @@ namespace Smartbell.Api.Controllers
     {
         private readonly IActivityRepository _repo;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _environment;
 
-        public ActivitiesController(IActivityRepository repo, IMapper mapper)
+        public ActivitiesController(IActivityRepository repo, 
+                                    IMapper mapper,
+                                    IWebHostEnvironment environment)
         {
             _repo = repo;
             _mapper = mapper;
+            _environment = environment;
         }
 
         // GET: api/Configs
@@ -88,12 +93,35 @@ namespace Smartbell.Api.Controllers
         // POST: api/Configs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Config>> PostActivity(CreateActivityDto activity)
+        public async Task<ActionResult<Config>> PostActivity([FromForm] CreateActivityDto activity)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    // process file upload
+                    //string webRootPath = this._environment.WebRootPath;
+                    string contentPath = this._environment.ContentRootPath;
+                    var imageFilePath = "Resources/Images";
+                    var videoFilePath = "Resources/Videos";
+                    var imagePath = Path.Combine(contentPath, imageFilePath);
+                    var videoPath = Path.Combine(contentPath, videoFilePath);
+                    var imageFileName = Path.GetFileName(activity.ImageFilePath.FileName);
+                    var videoFileName = Path.GetFileName(activity.VideoFilePath.FileName);
+
+                    if (!Directory.Exists(imagePath)) Directory.CreateDirectory(imagePath);
+                    if (!Directory.Exists(videoPath)) Directory.CreateDirectory(videoPath);
+
+                    using (var stream = new FileStream(Path.Combine(imagePath, imageFileName), FileMode.Create))
+                    {
+                        activity.ImageFilePath.CopyTo(stream);
+                    }
+
+                    using (var stream = new FileStream(Path.Combine(videoPath, videoFileName), FileMode.Create))
+                    {
+                        activity.VideoFilePath.CopyTo(stream);
+                    }
+
                     var mappedActivity = _mapper.Map<Activity>(activity);
                     mappedActivity.CreatedBy = "dboCreator";
                     mappedActivity.UpdatedBy = "dboCreator";
