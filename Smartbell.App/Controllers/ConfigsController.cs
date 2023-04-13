@@ -64,7 +64,9 @@ namespace Smartbell.App.Controllers
                         var res = _configService.UpdateAsync(model);
                     }
 
-                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await _configService.GetAsync()) });
+                    var response = await _configService.GetAsync();
+
+                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", response) });
                 }
 
 				return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", model) });

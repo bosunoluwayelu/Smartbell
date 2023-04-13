@@ -122,10 +122,21 @@ namespace Smartbell.Api.Controllers
                         activity.VideoFilePath.CopyTo(stream);
                     }
 
-                    var mappedActivity = _mapper.Map<Activity>(activity);
-                    mappedActivity.CreatedBy = "dboCreator";
-                    mappedActivity.UpdatedBy = "dboCreator";
-                    var createdActivity = _mapper.Map<ActivityResponseDto>(await _repo.CreateAsync(mappedActivity));
+                    //var mappedActivity = _mapper.Map<Activity>(activity);
+                    //mappedActivity.CreatedBy = "dboCreator";
+                    //mappedActivity.UpdatedBy = "dboCreator";
+
+                    var model = new Activity
+                    {
+                        Description = activity.Description,
+                        ImageFilePath = $"",
+                        VideoFilePath = $""
+                    };
+
+
+
+                    //var createdActivity = _mapper.Map<ActivityResponseDto>(await _repo.CreateAsync(mappedActivity));
+                    var createdActivity = _mapper.Map<ActivityResponseDto>(await _repo.CreateAsync(model));
 
                     //return Ok(createdConfig);
                     return CreatedAtAction("GetActivity", new { id = createdActivity.Id }, createdActivity);

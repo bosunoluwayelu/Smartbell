@@ -29,11 +29,13 @@ namespace Smartbell.App
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient("smrtbell", httpClient =>
             {
-                httpClient.BaseAddress = new Uri("https://smrtbell.tellimart.com/api/");
+                //httpClient.BaseAddress = new Uri("https://smrtbell.tellimart.com/api/");
+                httpClient.BaseAddress = new Uri("https://localhost:7203/api/");
             });
 
 			builder.Services.AddScoped<IConfigService, ConfigService>();
 			builder.Services.AddScoped<IRingtoneService, RingtoneService>();
+            builder.Services.AddScoped<IActivityService, ActivityService>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

@@ -1,0 +1,21 @@
+﻿@model CreateActivityDto
+
+
+
+<form asp-action="AddOrEdit" method="post" enctype="multipart/form-data">
+    <div>
+        <input type="text" asp-for="Description" />
+    </div>
+
+    <div>
+        <input type="file" asp-for="ImageFilePath" />
+    </div>
+
+    <div>
+        <input type="file" asp-for="VideoFilePath" />
+    </div>
+
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
+</form>

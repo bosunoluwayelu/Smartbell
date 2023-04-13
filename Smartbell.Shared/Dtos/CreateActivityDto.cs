@@ -13,10 +13,8 @@ namespace Smartbell.Shared.Dtos
         [Required]
         public string Description { get; set; }
 
-        [Required]
         public IFormFile ImageFilePath { get; set; }
 
-        [Required]
         public IFormFile VideoFilePath { get; set; }
     }
 }

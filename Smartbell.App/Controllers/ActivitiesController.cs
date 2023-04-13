@@ -5,79 +5,92 @@ namespace Smartbell.App.Controllers
 {
     public class ActivitiesController : Controller
     {
-        // GET: ActivitiesController
-        public ActionResult Index()
+        private readonly IActivityService _activityService;
+        private readonly IMapper _mapper;
+        public ActivitiesController(IActivityService activityService, IMapper mapper)
         {
-            return View();
+            _activityService = activityService;
+            _mapper = mapper;
         }
 
-        // GET: ActivitiesController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ActivitiesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ActivitiesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        // GET: ConfigController
+        public async Task<IActionResult> Index()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = await _activityService.GetAsync();
+                return View(model);
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return NotFound();
             }
         }
 
-        // GET: ActivitiesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> AddOrEdit(Guid Id)
+        {
+            try
+            {
+                if (Id == Guid.Empty) { return View(new CreateActivityDto()); }
+
+                var model = await _activityService.GetByIdAsync(Id);
+
+                return model == null ? NotFound() : View(model);
+
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrEdit(Guid Id, [Bind("Id,Description,ImageFilePath,VideoFilePath")] CreateActivityDto model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Id == Guid.Empty)
+                    {
+                        var res = _activityService.CreateAsync(model);
+                    }
+                    else
+                    {
+                        //var res = _configService.UpdateAsync(model);
+                    }
+
+                    var response = await _activityService.GetAsync();
+
+                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", response) });
+                }
+
+                return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", model) });
+
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+
+        public async Task<IActionResult> Delete(Guid id)
         {
             return View();
         }
 
-        // POST: ActivitiesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: ActivitiesController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ActivitiesController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var config = await _activityService.GetByIdAsync(id);
+
+            //if (config != null)
+                //await _activityService.DeleteAsync(config);
+
+            return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await _activityService.GetAsync()) });
         }
     }
 }
