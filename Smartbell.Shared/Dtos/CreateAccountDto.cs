@@ -18,7 +18,7 @@ namespace Smartbell.Shared.Dtos
         [DisplayName("Last Name")]
         public string LastName { get; set; }
 
-        [Required]
+        //[Required]
         public string UserName { get; set; }
 
         [Required]

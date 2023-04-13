@@ -140,7 +140,7 @@ namespace Smartbell.Api.Controllers
         }
 
         // DELETE: api/Configs/5
-        [HttpDelete("{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
             var activity = await _repo.GetByIdAsync(id);

@@ -34,7 +34,7 @@ jQueryAjaxPost = form => {
             contentType: false,
             processData: false,
             success: function (response) {
-                if (response.isvalid) {
+                if (response.isValid) {
                     $('#view-all').html(response.html);
                     $('#form-modal .modal-body').html('');
                     $('#form-modal .modal-title').html('');
