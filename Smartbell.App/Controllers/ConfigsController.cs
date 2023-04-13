@@ -1,83 +1,97 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Smartbell.App.Controllers
 {
     public class ConfigsController : Controller
     {
+        private readonly IConfigService _configService;
+        private readonly IMapper _mapper;
+        public ConfigsController(IConfigService configService, IMapper mapper)
+        {
+            _configService = configService;
+            _mapper = mapper;
+        }
+
         // GET: ConfigController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: ConfigController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ConfigController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ConfigController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Index()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var config = await _configService.GetAsync();
+                return View(config);
             }
-            catch
+            catch (Exception)
             {
-                return View();
-            }
+                return NotFound();
+            }            
         }
 
-        // GET: ConfigController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ConfigController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> AddOrEdit(Guid Id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+                if (Id == Guid.Empty) { return View(new ConfigResponseDto()); }
+
+                var config = await _configService.GetByIdAsync(Id);
+
+				return config == null ? NotFound() : View(config);
+
+			}
+            catch (Exception)
             {
-                return View();
+                return NotFound();
             }
         }
 
-        // GET: ConfigController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ConfigController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+		public async Task<IActionResult> AddOrEdit(Guid Id, [Bind("Id,Description,Value")] ConfigResponseDto model)
+		{
+			try
+			{
+                if (ModelState.IsValid)
+                {
+                    if (Id == Guid.Empty)
+                    {
+						// ConfigResponseDto -> CreateConfigDto
+						var config = _mapper.Map<CreateConfigDto>(model);
+                        var res = _configService.CreateAsync(config);
+                    }
+                    else
+                    {
+                        var res = _configService.UpdateAsync(model);
+                    }
+
+                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await _configService.GetAsync()) });
+                }
+
+				return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", model) });
+
+			}
+			catch (Exception)
+			{
+				return NotFound();
+			}
+		}
+
+		public async Task<IActionResult> Delete(Guid id)
+		{
+            return View();
+		}
+
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+            var config = await _configService.GetByIdAsync(id);
+
+            if (config != null)
+                await _configService.DeleteAsync(config);
+
+			return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await _configService.GetAsync()) });
+		}
+	}
 }

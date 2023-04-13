@@ -28,7 +28,7 @@ namespace Smartbell.App.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] CreateAccountDto model)
+        public async Task<IActionResult> Register(CreateAccountDto model)
         {
             if (ModelState.IsValid)
             {
@@ -41,13 +41,14 @@ namespace Smartbell.App.Controllers
                         LastName = model.LastName,
                         PhoneNumber = model.PhoneNumber,
                         Email = model.Email,
+                        UserName = model.Email.Split('@')[0]
                     };
 
                     var response = await _userManager.CreateAsync(user, model.Password);
 
                     if (response.Succeeded)
                     {
-                        Response.Redirect("/");
+                        return RedirectToAction("index","Home");
                     }
                 }
 

@@ -20,6 +20,7 @@ namespace Smartbell.Shared.Profiles
 
             CreateMap<Config, ConfigResponseDto>();
             CreateMap<ConfigResponseDto, Config>();
-        }
+			CreateMap<ConfigResponseDto, CreateConfigDto>();
+		}
     }
 }

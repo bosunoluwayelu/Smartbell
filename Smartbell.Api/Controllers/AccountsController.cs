@@ -38,7 +38,7 @@ namespace Smartbell.Api.Controllers
 
 
         // DELETE: api/Configs/5
-        [HttpDelete("{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
             var res = await _repo.DeleteAsync(id);
