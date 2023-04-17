@@ -102,25 +102,28 @@ namespace Smartbell.Api.Controllers
                     // process file upload
                     //string webRootPath = this._environment.WebRootPath;
                     string contentPath = this._environment.ContentRootPath;
-                    var imageFilePath = "Resources/Images";
-                    var videoFilePath = "Resources/Videos";
+                    var imageFilePath = @"Resources\Images";
+                    var videoFilePath = @"Resources\Videos";
                     var imagePath = Path.Combine(contentPath, imageFilePath);
                     var videoPath = Path.Combine(contentPath, videoFilePath);
-                    var imageFileName = Path.GetFileName(activity.ImageFilePath.FileName);
-                    var videoFileName = Path.GetFileName(activity.VideoFilePath.FileName);
 
-                    if (!Directory.Exists(imagePath)) Directory.CreateDirectory(imagePath);
-                    if (!Directory.Exists(videoPath)) Directory.CreateDirectory(videoPath);
+                    string imageFileName = "";
+                    string videoFileName = "";
 
-                    using (var stream = new FileStream(Path.Combine(imagePath, imageFileName), FileMode.Create))
-                    {
-                        activity.ImageFilePath.CopyTo(stream);
-                    }
+					if (activity.ImageFilePath != null) {
+						imageFileName = Path.GetFileName(activity.ImageFilePath.FileName);
+						if (!Directory.Exists(imagePath)) Directory.CreateDirectory(imagePath);
+						using var stream = new FileStream(Path.Combine(imagePath, imageFileName), FileMode.Create);
+						activity.ImageFilePath.CopyTo(stream);
+					}
 
-                    using (var stream = new FileStream(Path.Combine(videoPath, videoFileName), FileMode.Create))
-                    {
-                        activity.VideoFilePath.CopyTo(stream);
-                    }
+					if (activity.VideoFilePath != null)
+					{
+						videoFileName = Path.GetFileName(activity.VideoFilePath.FileName);
+						if (!Directory.Exists(videoPath)) Directory.CreateDirectory(videoPath);
+						using var stream = new FileStream(Path.Combine(videoPath, videoFileName), FileMode.Create);
+						activity.VideoFilePath.CopyTo(stream);
+					}
 
                     //var mappedActivity = _mapper.Map<Activity>(activity);
                     //mappedActivity.CreatedBy = "dboCreator";
@@ -129,11 +132,13 @@ namespace Smartbell.Api.Controllers
                     var model = new Activity
                     {
                         Description = activity.Description,
-                        ImageFilePath = $"",
-                        VideoFilePath = $""
-                    };
-
-
+                        ImageFilePath = activity.ImageFilePath == null ? "" : "https://smrtbell.tellimart.com/resources/images/" + imageFileName, // Path.Combine(imagePath, imageFileName),
+                        VideoFilePath = activity.VideoFilePath == null ? "" : "https://smrtbell.tellimart.com/resources/videos/" + videoFileName, // Path.Combine(videoPath, videoFileName),
+						CreatedBy = "dboCreator",
+						UpdatedBy = "dboCreator",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+					};
 
                     //var createdActivity = _mapper.Map<ActivityResponseDto>(await _repo.CreateAsync(mappedActivity));
                     var createdActivity = _mapper.Map<ActivityResponseDto>(await _repo.CreateAsync(model));

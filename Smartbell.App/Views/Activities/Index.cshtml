@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ActivityResponseDto>
+
+
+@{
+	ViewData["Title"] = "Activities";
+}
+
+<h1 class="text-center">
+	Activities
+</h1>
+
+<div id="view-all">
+	@await Html.PartialAsync("_ViewAll", Model)
+</div>
