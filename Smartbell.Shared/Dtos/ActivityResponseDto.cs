@@ -12,5 +12,6 @@ namespace Smartbell.Shared.Dtos
         public string Description { get; set; }
         public string ImageFilePath { get; set; }
         public string VideoFilePath { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

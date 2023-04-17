@@ -27,6 +27,7 @@
                             </video>
                         </td>
                         <td>
+                            @item.TimeStamp.ToString("dddd, dd MMMM yyyy HH:mm")
                         </td>
                         @*<td>
                             <a onclick="showInPopup('@Url.Action("AddOrEdit","Activities",new {Id=item.Id},Context.Request.Scheme)', 'Update Ringtone')"

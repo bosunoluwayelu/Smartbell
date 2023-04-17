@@ -18,7 +18,8 @@ namespace Smartbell.Shared.Profiles
                 .ForMember(destination => destination.CreatedDate, options => options.MapFrom(source => DateTime.Now))
                 .ForMember(destination => destination.UpdatedDate, options => options.MapFrom(source => DateTime.Now));
 
-            CreateMap<Activity, ActivityResponseDto>();
+            CreateMap<Activity, ActivityResponseDto>()
+                .ForMember(destination => destination.TimeStamp, options => options.MapFrom(source => source.CreatedDate));
             CreateMap<ActivityResponseDto, Activity>();
         }
     }

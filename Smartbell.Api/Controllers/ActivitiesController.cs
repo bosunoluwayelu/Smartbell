@@ -149,9 +149,9 @@ namespace Smartbell.Api.Controllers
 
                 return BadRequest("Error creating activity");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new JsonResult("[PostActivity error!]") { StatusCode = 500 };
+                return new JsonResult($"[PostActivity error!] - {ex.Message}") { StatusCode = 500 };
             }
         }
 
