@@ -1,4 +1,6 @@
-﻿namespace Smartbell.App.Services
+﻿using Smartbell.Shared.Contracts;
+
+namespace Smartbell.App.Services
 {
     public class ActivityService : IActivityService
     {
@@ -20,9 +22,17 @@
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ActivityResponseDto>> GetAsync()
+        public async Task<IEnumerable<ActivityResponseDto>> GetAsync()
         {
-            throw new NotImplementedException();
+            var http = _httpClientFactory.CreateClient("smrtbell");
+            var response = await http.GetAsync("activities");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<ActivityResponseDto>>();
+            }
+
+            return null;
         }
 
         public Task<ActivityResponseDto> GetByIdAsync(Guid id)

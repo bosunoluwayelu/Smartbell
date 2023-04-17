@@ -12,7 +12,7 @@
 			<th>
 				<a onclick="showInPopup('@Url.Action("AddOrEdit", "Configs", new {Id = Guid.Empty}, Context.Request.Scheme)','New Configuration')"
 				   class="btn btn-success text-white">
-					<i class="fa-solid fa-plus"></i> New Configuration
+					<i class="fa-solid fa-plus"></i> New
 				</a>
 			</th>
 		</tr>
@@ -28,14 +28,14 @@
 					@Html.DisplayFor(m => item.Value)
 				</td>
 				<td>
-					<a onclick="showInPopup('@Url.Action("AddOrEdit","Configs",new {Id=item.Id},Context.Request.Scheme)', 'Update Ringtone')"
+					<a onclick="showInPopup('@Url.Action("AddOrEdit","Configs",new {Id=item.Id},Context.Request.Scheme)', 'Update Configuration')"
 					   class="btn btn-info text-white">
 						<i class="fa-solid fa-pencil"></i> Edit
 					</a>
-					<form asp-action="Delete" asp-route-id="@item.Id" class="d-inline"
+@*					<form asp-action="Delete" asp-route-id="@item.Id" class="d-inline"
 		   onclick="return jQueryAjaxDelete(this);">
 						<input type="submit" value="Delete" class="btn btn-danger" />
-					</form>
+					</form>*@
 				</td>
 			</tr>
 		}
