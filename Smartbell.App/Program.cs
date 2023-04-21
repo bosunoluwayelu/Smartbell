@@ -22,9 +22,17 @@ namespace Smartbell.App
             var _connectionString = builder.Configuration.GetConnectionString("DefaultSqlServerConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_connectionString));
 
+            //// Identity configuration
+            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            //{}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
             // Identity configuration
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequiredUniqueChars = 3;
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient("smrtbell", httpClient =>

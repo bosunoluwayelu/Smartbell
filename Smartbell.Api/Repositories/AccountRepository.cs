@@ -20,7 +20,7 @@ namespace Smartbell.Api.Repositories
                 FirstName = createAccountDto.FirstName,
                 LastName = createAccountDto.LastName,
                 Email = createAccountDto.Email,
-                UserName = createAccountDto.UserName,
+                UserName = createAccountDto.Email.Split('@')[0],
                 PhoneNumber = createAccountDto?.PhoneNumber,
             };
 
