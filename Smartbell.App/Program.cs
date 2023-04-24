@@ -8,6 +8,7 @@ global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore;
 global using AutoMapper;
 global using Smartbell.App.Data;
+global using Microsoft.AspNetCore.Authorization;
 
 namespace Smartbell.App
 {
@@ -22,17 +23,17 @@ namespace Smartbell.App
             var _connectionString = builder.Configuration.GetConnectionString("DefaultSqlServerConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_connectionString));
 
-            //// Identity configuration
-            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            //{}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
             // Identity configuration
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
                 options.Password.RequireNonAlphanumeric = false;
-            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            //builder.Services.Configure<PasswordHasherOptions>(options =>
+            //    options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
+            //);
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient("smrtbell", httpClient =>
@@ -67,7 +68,7 @@ namespace Smartbell.App
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

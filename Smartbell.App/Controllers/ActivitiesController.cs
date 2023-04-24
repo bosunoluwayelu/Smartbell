@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Smartbell.App.Controllers
 {
+    [Authorize]
     public class ActivitiesController : Controller
     {
         private readonly IActivityService _activityService;

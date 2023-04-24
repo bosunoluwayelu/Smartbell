@@ -1,84 +1,150 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<ApplicationUser> _signInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Smart Doorbell</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Smartbell.App.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Smart Doorbell</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Smartbell.App.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/Images/smartbell-logo.png" alt="Smartbell App" />
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                @*<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">*@
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @* <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Configs" asp-action="Index">Config</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Ringtones" asp-action="Index">Ringtone</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Activities" asp-action="Index">Activity</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Register">Register</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			@*<div class="container-fluid">*@
+			<div class="container">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+					<img src="~/Images/smartbell-logo.png" alt="Smartbell App" />
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				@*<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">*@
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-center">
+					<ul class="navbar-nav flex-grow-1">
+						@*<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+						</li>*@
 
-    <div class="modal" tabindex="-1" id="form-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                   @* <p>Modal body text goes here.</p>*@
-                </div>
-            </div>
-        </div>
-    </div>
+						@if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+						{
+							<li class="nav-item dropdown">
+								<a href="#" class="nav-link dropdown-toggle text-dark"
+								   id="navbarDropdownMenuLink" data-bs-toggle="dropdown"
+								   aria-haspopup="true" aria-expanded="false">
+									Administration
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+									<a asp-action="ListUsers" asp-controller="Administration"
+										class="dropdown-item">Users</a>
+									<a asp-action="ListRoles" asp-controller="Administration"
+										class="dropdown-item">Roles</a>
+@*									<a asp-action="ChangePassword" asp-controller="Account"
+										class="dropdown-item">Change Password</a>*@
+								</div>
+							</li>
+						}
 
-    <div class="loaderbody" id="loaderbody">
-        <div class="loader"></div>
-    </div>
+						@if (_signInManager.IsSignedIn(User))
+						{
+							<li class="nav-item dropdown">
+								<a href="#" class="nav-link dropdown-toggle text-dark"
+								   id="navbarDropdownMenuLink" data-bs-toggle="dropdown"
+								   aria-haspopup="true" aria-expanded="false">
+									Setup
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+									<a asp-action="Index" asp-controller="Configs"
+										class="dropdown-item">Default Settings</a>
+									<a asp-action="Index" asp-controller="Ringtones"
+										class="dropdown-item">Ringtones</a>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Activities"
+							   asp-action="Index">Activity</a>
+							</li>
+						}
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - Smartbell.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/notify.min.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+						@*                        <li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Configs" asp-action="Index">Config</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Ringtones" asp-action="Index">Ringtone</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Activities" asp-action="Index">Activity</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+						</li>*@
+					</ul>
+					<ul class="navbar-nav ml-auto">
+						@if (_signInManager.IsSignedIn(User))
+						{
+							<li class="nav-item">
+								<form method="post" asp-action="logout" asp-controller="account">
+									<span>Welcome @User.Identity.Name | </span>
+									<button type="submit" class="nav-link btn btn-link py-0 text-dark" style="width:auto">
+										Logout
+									</button>
+								</form>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="account" asp-action="register">Register</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="account" asp-action="login">Login</a>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<div class="modal" tabindex="-1" id="form-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					@* <p>Modal body text goes here.</p>*@
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="loaderbody" id="loaderbody">
+		<div class="loader"></div>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; CNT Capstone 2023 - Smartbell - By Bosun & Mohammed @*<a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/notify.min.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
